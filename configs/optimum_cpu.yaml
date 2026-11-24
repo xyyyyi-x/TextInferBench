@@ -1,0 +1,40 @@
+defaults:
+  - benchmark
+  - scenario: inference
+  - launcher: process
+  - backend: pytorch
+  - _self_
+
+name: inferbench_optimum_cpu
+
+backend:
+  model: BAAI/bge-small-zh-v1.5
+  library: transformers
+  task: feature-extraction
+  model_type: bert
+  device: cpu
+  torch_dtype: float32
+  no_weights: false
+  intra_op_num_threads: 1
+  inter_op_num_threads: 1
+  model_kwargs:
+    revision: 7999e1d3359715c523056ef9478215996d62a620
+    use_safetensors: true
+  processor_kwargs:
+    revision: 7999e1d3359715c523056ef9478215996d62a620
+
+scenario:
+  duration: 0
+  iterations: 10
+  warmup_runs: 2
+  latency: true
+  memory: false
+  input_shapes:
+    batch_size: 1
+    sequence_length: 16
+
+hydra:
+  run:
+    dir: runs/${name}
+  job:
+    chdir: true
